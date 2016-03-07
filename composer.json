@@ -1,0 +1,25 @@
+{
+    "name": "madlines/criteria",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksander Ciesiołkiewicz",
+            "email": "aleksander.ciesiolkiewicz@sdimedia.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.2.*"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-4": {
+            "Madlines\\Criteria\\": "src",
+            "Madlines\\Criteria\\Tests\\": "tests"
+        }
+    }
+}
