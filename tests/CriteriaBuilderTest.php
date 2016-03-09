@@ -62,8 +62,7 @@ class CriteriaBuilderTest extends \PHPUnit_Framework_TestCase
             'foo__neq' => 'Cat',
         ];
 
-        $criteria = new Criteria();
-        $builder->buildFromArray($input, $criteria);
+        $builder->buildFromArray($input, new Criteria());
     }
 
     /**
@@ -78,7 +77,34 @@ class CriteriaBuilderTest extends \PHPUnit_Framework_TestCase
             'foo' => 'Cat',
         ];
 
-        $criteria = new Criteria();
-        $builder->buildFromArray($input, $criteria);
+        $builder->buildFromArray($input, new Criteria());
+    }
+
+    public function testUsingAMappingStrategy()
+    {
+        $builder = new CriteriaBuilder();
+        $builder->setMappingStrategy(function ($operator) {
+            if ('eq' === $operator) {
+                return Criterion\Equals::class;
+            }
+
+            if ('contains' === $operator) {
+                return Criterion\Contains::class;
+            }
+
+            return '';
+        });
+
+        $input = [
+            'foo__eq' => 'Cat',
+            'bar__contains' => 'Dog',
+        ];
+
+        $criteria = $builder->buildFromArray($input, new Criteria());
+
+        $all = $criteria->getAll();
+        $this->assertCount(2, $all);
+        $this->assertContains(new Criterion\Equals('foo', 'Cat'), $all, '', false, false);
+        $this->assertContains(new Criterion\Contains('bar', 'Dog'), $all, '', false, false);
     }
 }

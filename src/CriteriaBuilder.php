@@ -17,6 +17,11 @@ class CriteriaBuilder
     private $default;
 
     /**
+     * @var callable|null
+     */
+    private $mappingStrategy;
+
+    /**
      * @param string $name
      * @param string $criterionClassName
      * @return $this
@@ -40,6 +45,7 @@ class CriteriaBuilder
     /**
      * @param array $criteriaArray
      * @param Criteria $criteria
+     * @return Criteria
      */
     public function buildFromArray(array $criteriaArray, Criteria $criteria)
     {
@@ -78,9 +84,38 @@ class CriteriaBuilder
         }
 
         if (!\array_key_exists($operator, $this->map)) {
-            throw new \LogicException('There is no className mapped to ' . $operator);
+            $className = $this->generateClassName($operator);
+            if (!$className) {
+                throw new \LogicException('There is no className mapped to ' . $operator);
+            }
+        } else {
+            $className = $this->map[$operator];
         }
 
-        return [$keyName, $this->map[$operator]];
+        return [$keyName, $className];
+    }
+
+    /**
+     * @param string $operator
+     * @return string full classname or empty string
+     */
+    public function generateClassName($operator)
+    {
+        if ($this->mappingStrategy) {
+            $callback = $this->mappingStrategy;
+            return $callback($operator);
+        }
+
+        return '';
+    }
+
+    /**
+     * @param callable $strategy
+     * @return $this
+     */
+    public function setMappingStrategy(callable $strategy)
+    {
+        $this->mappingStrategy = $strategy;
+        return $this;
     }
 }
