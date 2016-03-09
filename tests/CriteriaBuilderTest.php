@@ -35,8 +35,7 @@ class CriteriaBuilderTest extends \PHPUnit_Framework_TestCase
             'dolor__ends_with' => 'Hedgehog',
         ];
 
-        $criteria = new Criteria();
-        $builder->buildFromArray($input, $criteria);
+        $criteria = $builder->buildFromArray($input, new Criteria());
 
         $keys = $criteria->getKeys();
         $this->assertCount(4, $keys);

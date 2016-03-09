@@ -47,8 +47,10 @@ class CriteriaBuilder
             list ($keyName, $className) = $this->getKeyNameAndCriterionClassName($key);
 
             $criterion = new $className($keyName, $value);
-            $criteria->add($criterion);
+            $criteria = $criteria->add($criterion);
         }
+
+        return $criteria;
     }
 
     /**

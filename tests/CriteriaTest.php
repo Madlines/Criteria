@@ -32,11 +32,11 @@ class CriteriaTest extends \PHPUnit_Framework_TestCase
         $criterion3 = $this->getCriterionMock('dolor', 'amet');
         $criterion4 = $this->getCriterionMock('dolor', 'vinco');
 
-        $criteria = new Criteria();
-        $criteria->add($criterion1);
-        $criteria->add($criterion2);
-        $criteria->add($criterion3);
-        $criteria->add($criterion4);
+        $criteria = (new Criteria())
+            ->add($criterion1)
+            ->add($criterion2)
+            ->add($criterion3)
+            ->add($criterion4);
 
         $all = $criteria->getAll();
         $this->assertCount(3, $all);
@@ -60,9 +60,9 @@ class CriteriaTest extends \PHPUnit_Framework_TestCase
         $criterion1 = $this->getCriterionMock('foo', 'bar');
         $criterion2 = $this->getCriterionMock('lorem', 'ipsum');
 
-        $criteria = new Criteria();
-        $criteria->add($criterion1);
-        $criteria->add($criterion2);
+        $criteria = (new Criteria())
+            ->add($criterion1)
+            ->add($criterion2);
 
         $this->assertTrue($criteria->keyExistsFor('foo'));
         $this->assertTrue($criteria->keyExistsFor('lorem'));
