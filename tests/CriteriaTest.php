@@ -5,6 +5,8 @@ namespace Madlines\Criteria\Tests;
 use Madlines\Criteria\BaseCriterion;
 use Madlines\Criteria\Criteria;
 use Madlines\Criteria\Criterion;
+use Madlines\Criteria\Tests\Mock\ExtendedCriteriaMockWithAllowedKeysSet;
+use Madlines\Criteria\Tests\Mock\ExtendedCriteriaMockWithEmptyListAllowedKeysSet;
 
 class CriteriaTest extends \PHPUnit_Framework_TestCase
 {
@@ -70,7 +72,50 @@ class CriteriaTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($criteria->keyExistsFor('dolor'));
     }
 
-    // TODO getAllowedKeys
-    // TODO how about subcriteria
-    // TODO how about Criterion objects which handle different cases (CriteriaAggregate)
+    public function testIfExtendedCriteriaWithAllowedKeysSetVerifyKeysProperly()
+    {
+        $criterion1 = $this->getCriterionMock('foo', 'bar');
+        $criterion2 = $this->getCriterionMock('lorem', 'ipsum');
+        $criterion3 = $this->getCriterionMock('dolor', 'amet');
+
+        $extendedCriteria = new ExtendedCriteriaMockWithAllowedKeysSet();
+
+        $this->assertTrue($extendedCriteria->canAdd($criterion1));
+        $this->assertFalse($extendedCriteria->canAdd($criterion2));
+        $this->assertTrue($extendedCriteria->canAdd($criterion3));
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testIfExtendedCriteriaWithAllowedKeysSetBlocksDisallowedKeys()
+    {
+        $criterion1 = $this->getCriterionMock('foo', 'bar');
+        $criterion2 = $this->getCriterionMock('lorem', 'ipsum');
+
+        $extendedCriteria = new ExtendedCriteriaMockWithAllowedKeysSet();
+
+        $extendedCriteria
+            ->add($criterion1)
+            ->add($criterion2); // this should throw exception
+    }
+
+    public function testIfExtendedCriteriaWithAllowedKeysSetToEmptyArrayAllowsAddingEveryKey()
+    {
+        $criterion1 = $this->getCriterionMock('foo', 'bar');
+        $criterion2 = $this->getCriterionMock('lorem', 'ipsum');
+        $criterion3 = $this->getCriterionMock('dolor', 'amet');
+
+        $extendedCriteria = new ExtendedCriteriaMockWithEmptyListAllowedKeysSet();
+        $extendedCriteria = $extendedCriteria
+            ->add($criterion1)
+            ->add($criterion2)
+            ->add($criterion3);
+
+        $keys = $extendedCriteria->getKeys();
+        $this->assertCount(3, $keys) ;
+        $this->assertContains('foo', $keys);
+        $this->assertContains('lorem', $keys);
+        $this->assertContains('dolor', $keys);
+    }
 }
