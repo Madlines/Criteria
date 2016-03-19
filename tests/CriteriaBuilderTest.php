@@ -5,6 +5,7 @@ namespace Madlines\Criteria\Tests;
 use Madlines\Criteria\Criteria;
 use Madlines\Criteria\CriteriaBuilder;
 use Madlines\Criteria\Criterion;
+use Madlines\Criteria\Tests\Mock\ExtendedCriteriaMockWithAllowedKeysSet;
 
 class CriteriaBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,6 +50,28 @@ class CriteriaBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(new Criterion\Equals('lorem', 'Dog'), $all, '', false, false);
         $this->assertContains(new Criterion\StartsWith('ipsum', 'Bird'), $all, '', false, false);
         $this->assertContains(new Criterion\EndsWith('dolor', 'Hedgehog'), $all, '', false, false);
+    }
+
+    public function testParsingToCriteriaWithAllowedKeysSet()
+    {
+        $builder = $this->getBuilder();
+
+        $input = [
+            'foo__eq' => 'Cat',
+            'lorem' => 'Dog',
+            'dolor__starts_with' => 'Bird',
+        ];
+
+        $criteria = $builder->buildFromArray($input, new ExtendedCriteriaMockWithAllowedKeysSet());
+
+        $keys = $criteria->getKeys();
+        $this->assertCount(2, $keys);
+        $this->assertContains('foo', $keys);
+        $this->assertContains('dolor', $keys);
+
+        $all = $criteria->getAll();
+        $this->assertContains(new Criterion\Equals('foo', 'Cat'), $all, '', false, false);
+        $this->assertContains(new Criterion\StartsWith('dolor', 'Bird'), $all, '', false, false);
     }
 
     /**
