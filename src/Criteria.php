@@ -10,6 +10,16 @@ class Criteria
     private $criteria = [];
 
     /**
+     * @var int|null
+     */
+    private $page;
+
+    /**
+     * @var int|null
+     */
+    private $resultsPerPage;
+
+    /**
      * @param Criterion[]
      */
     public function __construct($criteria = [])
@@ -33,10 +43,10 @@ class Criteria
             throw new \LogicException('A criterion you\'re trying to add contains a disallowed key');
         }
 
-        $criteriaArray = $this->criteria;
-        $criteriaArray[$criterion->getKey()] = $criterion;
+        $criteria = clone $this;
+        $criteria->criteria[$criterion->getKey()] = $criterion;
 
-        return new static($criteriaArray);
+        return $criteria;
     }
 
     /**
@@ -100,4 +110,45 @@ class Criteria
     {
         return [];
     }
+
+    /**
+     * @param int $page
+     * @param int $resultsPerPage
+     * @return Criteria
+     */
+    public function setPagination($page, $resultsPerPage)
+    {
+        $criteria = clone $this;
+
+        $criteria->page = (int) $page;
+        $criteria->resultsPerPage = (int) $resultsPerPage;
+
+        return $criteria;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage()
+    {
+        if (null === $this->page) {
+            throw new \LogicException('You have to setPagination first.');
+        }
+
+        return $this->page;
+    }
+
+    /**
+     * @return int
+     */
+    public function getResultsPerPage()
+    {
+        if (null === $this->resultsPerPage) {
+            throw new \LogicException('You have to setPagination first.');
+        }
+
+        return $this->resultsPerPage;
+    }
+
+
 }

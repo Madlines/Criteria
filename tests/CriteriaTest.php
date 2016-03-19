@@ -118,4 +118,35 @@ class CriteriaTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('lorem', $keys);
         $this->assertContains('dolor', $keys);
     }
+
+    public function testSettingPaginationOptions()
+    {
+        $criterion1 = $this->getCriterionMock('foo', 'bar');
+        $criteria = new Criteria();
+
+        $criteria = $criteria
+            ->setPagination(2, 50)
+            ->add($criterion1);
+
+        $this->assertEquals(2, $criteria->getPage());
+        $this->assertEquals(50, $criteria->getResultsPerPage());
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testGettingPageNumberIfPaginationOptionsAreNotSet()
+    {
+        $criteria = new Criteria();
+        $criteria->getPage();
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testGettingResultsPerPageIfPaginationOptionsAreNotSet()
+    {
+        $criteria = new Criteria();
+        $criteria->getResultsPerPage();
+    }
 }
