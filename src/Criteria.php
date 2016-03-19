@@ -136,5 +136,11 @@ class Criteria
         return $this->resultsPerPage;
     }
 
-
+    /**
+     * @return bool
+     */
+    public function isPaginationSet()
+    {
+        return (bool) $this->page && (bool) $this->resultsPerPage;
+    }
 }

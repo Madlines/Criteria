@@ -124,10 +124,13 @@ class CriteriaTest extends \PHPUnit_Framework_TestCase
         $criterion1 = $this->getCriterionMock('foo', 'bar');
         $criteria = new Criteria();
 
+        $this->assertFalse($criteria->isPaginationSet());
+
         $criteria = $criteria
             ->setPagination(2, 50)
             ->add($criterion1);
 
+        $this->assertTrue($criteria->isPaginationSet());
         $this->assertEquals(2, $criteria->getPage());
         $this->assertEquals(50, $criteria->getResultsPerPage());
     }
