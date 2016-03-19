@@ -20,20 +20,6 @@ class Criteria
     private $resultsPerPage;
 
     /**
-     * @param Criterion[]
-     */
-    public function __construct($criteria = [])
-    {
-        foreach($criteria as $criterion) {
-            if (!($criterion instanceof Criterion)) {
-                throw new \InvalidArgumentException('Criteria must be build of set of Criterion objects or empty array.');
-            }
-        }
-
-        $this->criteria = $criteria;
-    }
-
-    /**
      * @param Criterion $criterion
      * @return Criteria
      */
