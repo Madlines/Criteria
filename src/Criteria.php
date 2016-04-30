@@ -4,6 +4,9 @@ namespace Madlines\Criteria;
 
 class Criteria
 {
+    const DIR_ASC = 'ASC';
+    const DIR_DESC = 'DESC';
+
     /**
      * @var Criterion[]
      */
@@ -18,6 +21,16 @@ class Criteria
      * @var int|null
      */
     private $resultsPerPage;
+
+    /**
+     * @var string|null
+     */
+    private $sortBy;
+
+    /**
+     * @var string|null
+     */
+    private $sortDir;
 
     /**
      * @param Criterion $criterion
@@ -142,5 +155,41 @@ class Criteria
     public function isPaginationSet()
     {
         return (bool) $this->page && (bool) $this->resultsPerPage;
+    }
+
+    /**
+     * @param string $key
+     * @param string $direction
+     * @return Criteria
+     * @throws \LogicException
+     */
+    public function setSorting($key, $direction)
+    {
+        if (self::DIR_ASC !== $direction && self::DIR_DESC !== $direction) {
+            throw new \LogicException('Sorting direction has to be either ASC or DESC');
+        }
+
+        $criteria = clone $this;
+
+        $criteria->sortBy = (string) $key;
+        $criteria->sortDir = $direction;
+
+        return $criteria;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSortingKey()
+    {
+        return $this->sortBy;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSortingDirection()
+    {
+        return $this->sortDir;
     }
 }

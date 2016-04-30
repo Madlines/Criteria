@@ -152,4 +152,26 @@ class CriteriaTest extends \PHPUnit_Framework_TestCase
         $criteria = new Criteria();
         $criteria->getResultsPerPage();
     }
+
+    public function testSettingSortingOptions()
+    {
+        $criteria = new Criteria();
+        $criteria = $criteria->setSorting('foo', Criteria::DIR_ASC);
+        $criteria2 = $criteria->setSorting('bar', Criteria::DIR_DESC);
+
+        $this->assertEquals('foo', $criteria->getSortingKey());
+        $this->assertEquals(Criteria::DIR_ASC, $criteria->getSortingDirection());
+
+        $this->assertEquals('bar', $criteria2->getSortingKey());
+        $this->assertEquals(Criteria::DIR_DESC, $criteria2->getSortingDirection());
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testSettingSortingOptionswithWrongDirection()
+    {
+        $criteria = new Criteria();
+        $criteria->setSorting('foo', 'BAR');
+    }
 }
