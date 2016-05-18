@@ -178,10 +178,22 @@ class Criteria
     }
 
     /**
+     * @return bool
+     */
+    public function isSortingSet()
+    {
+        return null !== $this->sortBy && null !== $this->sortDir;
+    }
+
+    /**
      * @return null|string
      */
     public function getSortingKey()
     {
+        if (!$this->isSortingSet()) {
+            throw new \LogicException('You have to setSorting first.');
+        }
+
         return $this->sortBy;
     }
 
@@ -190,6 +202,10 @@ class Criteria
      */
     public function getSortingDirection()
     {
+        if (!$this->isSortingSet()) {
+            throw new \LogicException('You have to setSorting first.');
+        }
+
         return $this->sortDir;
     }
 }

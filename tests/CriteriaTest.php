@@ -156,8 +156,13 @@ class CriteriaTest extends \PHPUnit_Framework_TestCase
     public function testSettingSortingOptions()
     {
         $criteria = new Criteria();
+        $this->assertFalse($criteria->isSortingSet());
+
         $criteria = $criteria->setSorting('foo', Criteria::DIR_ASC);
         $criteria2 = $criteria->setSorting('bar', Criteria::DIR_DESC);
+
+        $this->assertTrue($criteria->isSortingSet());
+        $this->assertTrue($criteria2->isSortingSet());
 
         $this->assertEquals('foo', $criteria->getSortingKey());
         $this->assertEquals(Criteria::DIR_ASC, $criteria->getSortingDirection());
@@ -169,9 +174,18 @@ class CriteriaTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testSettingSortingOptionswithWrongDirection()
+    public function testSettingSortingOptionsWithWrongDirection()
     {
         $criteria = new Criteria();
         $criteria->setSorting('foo', 'BAR');
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testGettingSortingOptionsifSortingIsNotSet()
+    {
+        $criteria = new Criteria();
+        $criteria->getSortingKey();
     }
 }
