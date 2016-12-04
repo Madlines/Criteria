@@ -34,7 +34,7 @@ class Criteria
 
     /**
      * @param Criterion $criterion
-     * @return Criteria
+     * @return Criteria|mixed
      */
     public function add(Criterion $criterion)
     {
@@ -89,7 +89,7 @@ class Criteria
 
     /**
      * @param string $key
-     * @return Criterion[]
+     * @return Criterion
      */
     public function getFor($key)
     {
